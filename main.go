@@ -12,6 +12,8 @@ import (
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	fs := http.FileServer(http.Dir("./dist"))
+	r.Handle("/dist/*", http.StripPrefix("/dist/", fs))
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		template.Dashboard.ExecuteWriter(pongo2.Context{}, w)
 	})
