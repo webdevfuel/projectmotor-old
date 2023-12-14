@@ -1,9 +1,25 @@
 package handler
 
-type Handler struct{}
+import (
+	"net/http"
 
-type HandlerOptions struct{}
+	"github.com/gorilla/sessions"
+)
+
+type Handler struct {
+	store *sessions.CookieStore
+}
+
+type HandlerOptions struct {
+	Store *sessions.CookieStore
+}
 
 func NewHandler(options HandlerOptions) *Handler {
-	return &Handler{}
+	return &Handler{
+		store: options.Store,
+	}
+}
+
+func (h Handler) GetSessionStore(r *http.Request) (*sessions.Session, error) {
+	return h.store.Get(r, "_projectmotor_session")
 }
